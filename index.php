@@ -1,5 +1,6 @@
 <?php
 session_start();
+$_SESSION['db'] = 'db.txt';
 include('functions.php');
 if($_SESSION['sign'] == null){
     $_SESSION['sign'] = 0;
@@ -7,6 +8,7 @@ if($_SESSION['sign'] == null){
     $_SESSION['pass'] = '';
     $_SESSION['chpass'] = 0;
 }
+$_SESSION['message1']= ''; // сообщение в окне sign
 
 $_SESSION['corr'] = 1;
 //$user_login[0] - login
@@ -49,7 +51,7 @@ $_SESSION['corr'] = 1;
 <?php
 echo start();
 ?>
-    <div class="container">
+<div class="container">
     <footer style="padding-top: 60px;" class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
         <p class="col-md-4 mb-0 text-muted">2022</p>
         <ul class="nav col-md-4 justify-content-end">

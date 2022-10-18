@@ -42,7 +42,15 @@
                 $return.="<form action='sign.php'>
                     <button type='submit' class='btn btn-primary btn-lg'>Сменить пароль</button>
                     </form>";
-                $return .= users();
+                switch ($_SESSION['login'] == 'admin'){
+                    case 0:
+                        $return .= user_prof();
+                        break;
+                    case 1:
+                        $return .= admin_prof();
+                        break;
+                }
+
 
             break;
 
@@ -63,7 +71,7 @@
             $return.="<a href='index.php' class='text-white' style='text-decoration: none;'><h1>Защита информации ЛР№1</h1></a>";
         }
         else{
-            $return.="<a href='' class='text-white' style='text-decoration: none;'><h1>Защита информации ЛР№1</h1></a>";
+            $return.="<a href='index.php' class='text-white' style='text-decoration: none;'><h1>Защита информации ЛР№1</h1></a>";
         }
 
         $return.="</div>
@@ -92,12 +100,9 @@
                         <div class='col-lg-12'>";
         switch ($_SESSION['sign']){
             case 0:
-                if($_SESSION['chpass'] == 1){
-                    $return.="<h2>Смена пароля</h2>";
-                }else{
+                if($_SESSION['chpass'] != 1){
                     $return.="<h2>Вход в систему</h2>";
                 }
-
                 break;
             case 1:
                 $return.="<h2>Смена пароля (при успешной смене произойдет выход из системы)</h2>";
@@ -106,31 +111,29 @@
         $return.="</div>
                     </div>
                 </div>
-            <div class='container'>";
-        if ($_SESSION['corr'] == 0 and $_SESSION['chpass'] == 0){
-            $return.="<h1>Некорректный логин или пароль, попробуй ещё раз!</h1>";
-        }
-        if ($_SESSION['corr'] == 2){
-            $return.="<h1>Учетная запись заблокирована, обратись к админу!</h1>";
-        }
-        if($_SESSION['sign'] == 0 and $_SESSION['chpass'] == 0) {
-            $return .= sign_in();
-        }
-        elseif($_SESSION['sign'] == 1){
-            $return.= change_pass();
-        }
-        elseif($_SESSION['chpass'] == 1 and $_SESSION['sign'] == 0){
-            switch ($_SESSION['condition']){
-                case 0:
-                    $return.="<h1>Необходимо сменить, или установить пароль!</h1>";
-                    break;
-                case 1:
-                    $return.="<h1>Необходимо сменить, или установить пароль!<br>
-                    Чередование цифр, знаков арифметических операций и снова цифр</h1>";
-                    break;
-            }
-
-            $return.= change_pass();
+            <div class='container'><h1>";
+        $return.= $_SESSION['message1'];
+        $return.="</h1>";
+        switch ($_SESSION['sign']== 0){
+            //проверка входа
+            case 0:
+                //вход выполнен
+                $return.= change_pass();
+                break;
+            case 1:
+                //вход не выполнен
+                switch ($_SESSION['chpass'] == 0){
+                    //проверка необходимости смены пароля
+                    case 0:
+                        //нужно менять
+                        $return.= change_pass();
+                        break;
+                    case 1:
+                        //не нужно менять
+                        $return .= sign_in();
+                        break;
+                }
+                break;
         }
         $return.="</div>";
         return $return;
@@ -156,42 +159,77 @@
 
     function change_pass(){
         $return='';
+        $default_pass = '';
+        if($_SESSION['pass'] == ''){
+            $default_pass .= 'hidden';
+        }
         $return.="<form action='./checksign.php' id='sign' method='post'></form>
             <input type='password' class='form-control' 
                 placeholder='Old Password' 
                 form='sign' 
                 aria-label='Old Password' 
-                name='oldpass'/>
+                name='oldpass' $default_pass/>
             <span class='input-group-text'></span>";
         if($_SESSION['chpass'] == 1){
             $return.="<input type='password' class='form-control' 
                 placeholder='New Password' 
                 form='sign' 
                 aria-label='New Password' 
-                name='pass' title='0-9 +-*/% 0-9' required />";
+                name='pass' required />
+                <input type='password' class='form-control' 
+                placeholder='New Password' 
+                form='sign' 
+                aria-label='New Password' 
+                name='pass1' required />";
         }else{
             $return.="<input type='password' class='form-control' 
                 placeholder='New Password' 
                 form='sign' 
                 aria-label='New Password' 
-                name='pass' required />";
+                name='pass' required />
+                <input type='password' class='form-control' 
+                placeholder='New Password' 
+                form='sign' 
+                aria-label='New Password' 
+                name='pass1' required />";
         }
 
         $return.="<input class='btn btn-primary' type='submit' value='Подтвердить' form='sign' name='sign'/>";
         return $return;
     }
 
-    function users(){
+    function user_prof(){
+        $return = '';
+        $return .= "<h1>Держи картинку:</h1>";
+        $pic = rand(0, 2);
+        $pic_fold = '';
+        switch ($pic){
+            case 0:
+                $pic_fold .= "'/images/cats1.gif'";
+                break;
+            case 1:
+                $pic_fold .= "'/images/cats2.gif'";
+                break;
+            case 2:
+                $pic_fold .= "'/images/cats3.gif'";
+                break;
+        }
+        $return .= "<div class='text-center'>
+            <img width='250' src=$pic_fold>
+</div>";
+        return $return;
+    }
+
+    function admin_prof(){
         $return='';
         $return .= "<h1>Пользователи:</h1>";
-        $db = file_get_contents("db.txt");
+        $db = file_get_contents($_SESSION['db']);
         $_SESSION['db_info']=explode("\n",$db);
         $users_count = count($_SESSION['db_info']);
         $return .="<table class='table table-striped text-center'>
                     <tbody>
                     <tr>
                         <td>Логин:</td>";
-        if($_SESSION['login'] == 'admin') {
             $return .="<td> Условие пароля: </td>
                     <td>Доступ к учетке:</td>
                     <td></td>
@@ -205,7 +243,7 @@
                     aria-label='Username' 
                     name='login' required/>
                     </td><td>
-                        <select class='form-select-sm' form='adduser' name='condition'>
+                        <select class='form-select-sm btn-light' form='adduser' name='condition'>
                             <option value='0'>нет</option>
                             <option value='1'>да</option> 
                         </select>
@@ -217,7 +255,7 @@
                         form='adduser' 
                         name='adduser'/>
                     </td>";
-        }
+
         $return .="</tr>";
         foreach ($_SESSION['db_info'] as $value){
             $user_login=explode(":",$value);
@@ -236,15 +274,16 @@
                     <form action='./droppassword.php' id='$drop' method='post'></form>
                     <form action='./checkcondpass.php' id='$checkcondpass' method='post'></form>
                     <td> $user_login[0] </td>";
-            if($_SESSION['login'] == 'admin'){
 //condition password
                 $return .="<td>
                             ";
-                if($user_login[2] == 1){
+                if($user_login[2] == 1 and $user_login[0] != 'admin'){
                     $return .="<input class='btn btn-light' type='submit' value='да' form='$checkcondpass' name='condition'/>";
                 }
-                else{
+                elseif($user_login[2] == 0 and $user_login[0] != 'admin'){
                     $return .="<input class='btn btn-light' type='submit' value='нет' form='$checkcondpass' name='condition'/>";
+                }else{
+                    $return .="<input class='btn btn-dark' type='submit' value='нет' name='condition' disabled/>";
                 }
 
                 $return .="<input class='btn' value='$user_login[0]' form='$checkcondpass' name='login' hidden/></td>";
@@ -281,7 +320,7 @@
                     name='sign' disabled/></td>";
                 }
                 //$return .="</td><td></td>";
-            }
+
             $return .="</tr>";
         }
         $return .="</tbody>

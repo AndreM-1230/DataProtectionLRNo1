@@ -1,5 +1,6 @@
-admin:1234:0:0
+admin:4444:0:0
 test:1234:0:0
 test2:11%%11:1:0
-test_add::1:0
-test_add2::0:0
+test_add:11%%11:1:0
+test_add2:1:0:1
+user:12%%32:0:1

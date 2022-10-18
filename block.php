@@ -1,6 +1,6 @@
 <?php
 session_start();
-$db = file("db.txt", FILE_IGNORE_NEW_LINES);
+$db = file($_SESSION['db'], FILE_IGNORE_NEW_LINES);
 $newpass = '';
 foreach ($db as $key => $value){
     $user_login = explode(":", $value);
