@@ -33,7 +33,16 @@ include('functions.php');
                 <a href='index.php' class='text-white' style='text-decoration: none;'><h1>Защита информации ЛР№1</h1></a>
             </div>
             <div class='navbar-header col-lg-3'>
-
+<?php
+    switch($_SESSION['crypt']){
+        case 0:
+            echo "<h2>Установка ключа</h2>";
+            break;
+        case 1:
+            echo "<h2>Ввод ключа</h2>";
+            break;
+    }
+?>
             </div>
             <div class='navbar-header'>
             </div>
@@ -61,6 +70,9 @@ if($_GET['result'] == 'passerror'){
             </div>
         </div>
     </div>
+<?php
+    echo footer();
+?>
 <div class="clearfix"></div>
 </div>
 </body>

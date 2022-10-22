@@ -63,6 +63,7 @@ switch($_SESSION['sign']){
 <body>
 <?php
     echo sign();
+    echo footer();
 ?>
 <div class="clearfix"></div>
 </div>

@@ -79,7 +79,11 @@
         switch ($_SESSION['sign']){
             case 0:
                 if($_SESSION['chpass'] == 1){
-                    $return.="<h2>Смена пароля</h2>";
+                    if($_SESSION['pass'] == ''){
+                        $return.="<h2>Установка пароля</h2>";
+                    }else{
+                        $return.="<h2>Смена пароля</h2>";
+                    }
                 }else{
                     $return.="<h2>Вход в систему</h2>";
                 }
@@ -337,7 +341,19 @@
     function encrypt(){
 
 
-}
+    }
+
+    function footer(){
+        $return = '';
+        $return .="<div class='container'>
+            <footer class='text-center text-white fixed-bottom bg-dark'>
+                <div class='text-center p-3' style='background-color: rgba(0, 0, 0, 0.2);'>
+                    <a class='nav-link fs-6 text-white' href='https://github.com/AndreM-1230/DataProtectionLRNo1'>2022: Github</a>
+                </div>
+            </footer>
+        </div>";
+        return $return;
+    }
 
 
     function decrypt(){
@@ -349,7 +365,7 @@
         <input class='btn btn-primary' type='submit' value='Ввести ключ' form='decrypt' name='sign'/>";
         return $return;
 
-}
+    }
 
     function setkey(){
         $return = '';
@@ -359,4 +375,4 @@
         aria-label='Key for database' name='key' required/>
             <input class='btn btn-primary' type='submit' value='Установить ключ' form='setkey' name='sign'/>";
         return $return;
-}
+    }
