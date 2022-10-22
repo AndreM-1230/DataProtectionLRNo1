@@ -1,7 +1,7 @@
 <?php
 session_start();
-$_SESSION['db'] = 'db.txt';
 include('functions.php');
+$_SESSION['db'] = 'db.txt';
 if($_SESSION['sign'] == null){
     $_SESSION['sign'] = 0;
     $_SESSION['login'] = '';

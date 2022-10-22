@@ -200,7 +200,9 @@
 
     function user_prof(){
         $return = '';
-        $return .= "<h1>Держи картинку:</h1>";
+        $return .= "<form action='encrypt.php'>
+        <button type='submit' class='btn btn-primary btn-lg'>Сохранить изменения в бд</button>
+        </form><h1>Держи картинку:</h1>";
         $pic = rand(0, 2);
         $pic_fold = '';
         switch ($pic){
@@ -222,9 +224,13 @@
 
     function admin_prof(){
         $return='';
-        $return .= "<h1>Пользователи:</h1>";
-        $db = file_get_contents($_SESSION['db']);
-        $_SESSION['db_info']=explode("\n",$db);
+        $return .= "
+        <form action='encrypt.php'>
+        <button type='submit' class='btn btn-primary btn-lg'>Сохранить изменения в бд</button>
+        </form>
+        <h1>Пользователи:</h1>";
+        //$db = file_get_contents($_SESSION['db']);
+        //$_SESSION['db_info']=explode("\n",$db);
         $users_count = count($_SESSION['db_info']);
         $return .="<table class='table table-striped text-center'>
                     <tbody>
@@ -327,3 +333,30 @@
             </table>";
         return $return;
     }
+
+    function encrypt(){
+
+
+}
+
+
+    function decrypt(){
+        $return = '';
+        $return .= "<form action='./decrypt.php' id='decrypt' method='post'></form>
+        <input type='password' class='form-control'
+        placeholder='Key for database' form='decrypt'
+        aria-label='Key for database' name='key' required/>
+        <input class='btn btn-primary' type='submit' value='Ввести ключ' form='decrypt' name='sign'/>";
+        return $return;
+
+}
+
+    function setkey(){
+        $return = '';
+        $return .= "<form action='./setkey.php' id='setkey' method='post'></form>
+        <input type='password' class='form-control'
+        placeholder='Key for database' form='setkey'
+        aria-label='Key for database' name='key' required/>
+            <input class='btn btn-primary' type='submit' value='Установить ключ' form='setkey' name='sign'/>";
+        return $return;
+}
